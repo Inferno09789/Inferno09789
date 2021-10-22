@@ -1,0 +1,143 @@
+from _typeshed import IdentityFunction
+from types import AsyncGeneratorType
+from typing import Sequence, Text
+import discord 
+from discord.ext import commands
+from discord.ext.commands import has_permissions 
+import youtube_dl
+
+
+for i in range(len(cogs)):
+    cogs[i].setup(client)
+
+
+
+
+Intents = discord.Intents.all()
+
+
+
+client = commands.Bot(command_prefix= "!")
+client.remove_command("help")
+
+
+
+@client.event
+async def on_ready():
+    print("online gotowy do służby2137")
+    await client.change_presence(activity=discord.Game(name="!help"))
+
+
+
+
+@client.command()
+async def help(ctx):
+    embed=discord.Embed(title="Inf3rn0")
+    embed.add_field(name="Komenda 2", value="!", inline=True)
+    embed.add_field(name="Komenda 1", value="!", inline=True)
+    embed.add_field(name="Komenda 1", value="!", inline=True)
+    embed.add_field(name="Komenda 1", value="!", inline=True)
+    embed.add_field(name="Komenda 1", value="!", inline=True)
+    embed.set_footer(text="Author Inf3rn0#4712")
+    await ctx.send(embed=embed)
+
+
+@client.command()
+@has_permissions(ban_members=True)
+async def ban(ctx, member : discord.Member,reason="Z Buta"):
+    await member.ban(reason=reason)
+    await ctx.channel.send(f"Dostał bana {member} za {reason} ")
+
+
+
+@client.command()
+@has_permissions(kick_members=True)
+async def kick(ctx, member : discord.Member,reason="Tak z Buta"):
+    await member.kick(reason=reason)
+    await ctx.channel.send(f"Dostał kicka {member} za {reason} ")
+
+
+@client.command()
+async def clear(ctx, amount=10):
+    await ctx.channel.purge(limit=amount)
+
+
+
+@client.command()
+async def gra(ctx,game):
+    await client.change_presence(activity=discord.Game(name=game))
+
+@client.command()
+async def verify(ctx):
+    await ctx.send("Kliknij w emotke zeby sie zwerfikowac sie ") # do poprawek 
+    await msg.add_reaction('✅')
+
+
+@client.event
+async def on_raw_reaction_add(payload):
+    if payload.message_id == 896074490394579015:
+        if payload.emoji.name == "✅":
+            guild =client.get_guild(payload.guild_id)
+            member = guild.get_member(payload.user.id)
+            rola = discord.utils.get(guild.roles, id=844147514873348107) # do poprawek
+            await member.add_roles(rola)
+
+
+
+@client.command()
+async def unban(ctx, *, member):
+	banned_users = await ctx.guild.bans()
+	
+	member_name, member_discriminator = member.split('#')
+	for ban_entry in banned_users:
+		user = ban_entry.user
+		
+		if (user.name, user.discriminator) == (member_name, member_discriminator):
+ 			await ctx.guild.unban(user)
+ 			await ctx.channel.send(f"Unbanned: {user.mention}")
+
+
+class music(commands.Cog):
+    def __init__(self, client):
+            self.client = client
+
+
+@commands.command()
+async def join(self,ctx):
+    if ctx.author.voice is None:
+        await ctx.send("Nie ma cie na kanale")
+        voice_channel = ctx.author.voice.channel
+        if ctx.voice_client is None:
+            await voice_channel.connect()
+        else:
+            await ctx.voice_client.move_to(voice_channel)
+                     
+@commands.command()
+async def disconnect(self,ctx):
+    await ctx.voice_client.disconnect()
+
+@commands.command()
+async def play(self,ctx,url):
+    ctx.voice_client.stop()
+    FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': 'vn'}
+    YDL_OPTIONS = {'format':"bestaudio"}
+    vc = ctx.voice_client
+
+    with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+        info = ydl.extract_info(url, download=False)
+        url2 = info['formats'] [0] ['url']
+        source = await discord.FFmpeg0pusAudio.from_probe(ur12,**FFMPEG_OPTIONS)
+        vc.play(source)
+            
+           
+@commands.command()
+async def pause(self,ctx):
+    await ctx.voice_client.pause()
+    await ctx.send("Paused")
+
+@commands.command()
+async def resume(self,ctx):
+    await ctx.voice_client.resume()
+    await ctx.send("resume")
+
+client.run("ODk1MzI2MDk3MzEzNTA1MzMx.YV27Zw.WXz3ORRwOw1RKXNNUZQc43FG7rA")
